@@ -1,14 +1,15 @@
-# Use Python 3.11 base image
+# Use Python 3.11 slim base
 FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy local files to container
+# Copy requirements and install dependencies
 COPY requirements.txt .
-
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install ffmpeg for audio processing
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 # Copy the rest of the app
 COPY . .
@@ -16,5 +17,5 @@ COPY . .
 # Expose port 9000 for API
 EXPOSE 9000
 
-# Command to run the app
+# Run the app
 CMD ["python", "app.py"]
